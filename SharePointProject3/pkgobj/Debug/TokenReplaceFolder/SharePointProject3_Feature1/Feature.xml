@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Feature xmlns="http://schemas.microsoft.com/sharepoint/" Title="SharePointProject3 Feature1" Id="5616fe9d-7c91-4251-bf85-12ab7e4f1796" Scope="Web">
+  <ElementManifests>
+    <ElementManifest Location="CustomAction\Elements.xml" />
+    <ElementFile Location="CustomAction\Sample.txt" />
+  </ElementManifests>
+</Feature>

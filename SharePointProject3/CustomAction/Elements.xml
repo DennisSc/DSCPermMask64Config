@@ -1,0 +1,114 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Elements xmlns="http://schemas.microsoft.com/sharepoint/">
+  <CustomAction
+  Rights="ManageWeb"
+  Id="Ribbon.Library.Actions.AddAButton"
+  Location="CommandUI.Ribbon"
+  RegistrationId="0x01"
+  RegistrationType="ContentType"
+  Title="MoveDocs Ribbon Button">
+    <CommandUIExtension>
+      <CommandUIDefinitions>
+        <CommandUIDefinition
+          Location="Ribbon.Library.Settings.Controls._children">
+          <Button Id="Ribbon.Library.Settings.NewRibbonButton"
+            Command="permMaskButtonCommand"
+            LabelText="DSCPermMask64 Config"
+                  ToolTipTitle="DSC PermMask64 Config"
+                  ToolTipDescription="DSC PermMask64 Config - configure 'AnonymousPermMask64' property of lists and libraries to allow anonymous access."
+                  ToolTipImage32by32="/_layouts/15/1033/images/formatmap32x32.png?rev=33"
+                    ToolTipImage32by32Left="-273"
+                    ToolTipImage32by32Top="-444"
+           Image32by32="/_layouts/15/1033/images/formatmap32x32.png?rev=33"
+                    Image32by32Left="-273"
+                    Image32by32Top="-444"
+            Image16by16="/_layouts/15/1033/images/formatmap16x16.png?rev=33"
+                  Image16by16Left="-140"
+                    Image16by16Top="-19"
+            TemplateAlias="o2" />
+        </CommandUIDefinition>
+      </CommandUIDefinitions>
+      <CommandUIHandlers>
+        <CommandUIHandler
+          Command="permMaskButtonCommand"
+          CommandAction="javascript:
+            var context;
+            var notifyId;
+            var currentItem;
+         
+          function onQuerySucceededUpdate (sender, args) {
+              alert('item updated');
+          }    
+ 
+          function onQueryFailedUpdate(sender, args) {
+            alert('Error occured' + args.get_message());
+          }  
+           
+          function UpdateCategory(val)
+          {
+             context = SP.ClientContext.get_current();
+             var web = context.get_web();
+             context.load(web, 'Title');  
+             var currentlibid = SP.ListOperation.Selection.getSelectedList();
+             var currentLib = web.get_lists().getById(currentlibid);
+             alert(currentlibid);
+          var selectedItems = SP.ListOperation.Selection.getSelectedItems(context);
+             for(var i in selectedItems)
+              {
+                currentItem = currentLib.getItemById(selectedItems[i].id);
+                context.load(currentItem);
+                if(currentItem != null) {
+                  currentItem.set_item('Kategorie', val);
+                  currentItem.update();
+                }
+                context.executeQueryAsync(Function.createDelegate(this, onQuerySucceededUpdate), Function.createDelegate(this, onQueryFailedUpdate));
+              }//End for
+          }//End UpdateCategory
+ 
+           function getLibraryName()
+           {
+              context = SP.ClientContext.get_current();
+             var web = context.get_web();
+             context.load(web, 'Title');  
+             var currentlibid = SP.ListOperation.Selection.getSelectedList();
+             
+             var currentLib = web.get_lists().getById(currentlibid);
+             var selectedItems = SP.ListOperation.Selection.getSelectedItems(context);
+             context.executeQueryAsync();
+             
+          if (currentLib != null) 
+             {
+              //(currentLib.ID);
+              //alert(currentLib);
+              return currentlibid;
+                  
+              }
+          
+             //context.executeQueryAsync(Function.createDelegate(this, onQuerySucceededUpdate), Function.createDelegate(this, onQueryFailedUpdate));
+             }
+          
+          
+          var dlg = SP.UI.ModalDialog.showModalDialog({url: '{SiteUrl}/_layouts/15/SharePointProject3/ApplicationPage1.aspx?LibraryName='+getLibraryName(), dialogReturnValueCallback:function(res, val) {       
+                if(res=='1')
+                  {
+                    //alert(val);
+                    UpdateCategory(val);
+                  }
+                else
+                {
+                  //UpdateCategory(val);
+                  //alert('Abbruch');
+                }
+               }
+              });
+           
+           
+            
+"/>
+      </CommandUIHandlers>
+    </CommandUIExtension>
+  </CustomAction>
+
+  <Module Name="CustomAction">
+  </Module>
+</Elements>

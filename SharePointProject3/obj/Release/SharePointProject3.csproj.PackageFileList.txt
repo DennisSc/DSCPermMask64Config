@@ -1,0 +1,1 @@
+bin\Release\SharePointProject3.wsp
